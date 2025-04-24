@@ -6,6 +6,7 @@ WINNING_LINES = [[1,2,3], [4,5,6], [7,8,9], [1,4,7], [2,5,8], [3,6,9],
 INITIAL_MARKER = ' '
 USER_MARKER = 'O'
 COMPUTER_MARKER = 'X'
+WINNING_SCORE = 5
 
 
 def display_board(board):
@@ -75,6 +76,10 @@ def detect_winner(board):
 def start_game():
     board = initialize_board()
     display_board(board)
+    score = {
+        'User' : 0,
+        'Computer': 0
+    }
     prompt('Welcome to Tic Tac Toe!')
     prompt('Tic Tac Toe is a 2-player game played on a 3x3 '
     'grid called the board.')
@@ -99,6 +104,10 @@ def start_game():
 
     if someone_won(board):
         prompt(f"The winner is '{detect_winner(board)}'!")
+        score[detect_winner(board)] += 1
+        prompt(f'The current score of User vs Computer is' 
+               f'{score['User']} : {score['Computer']}')
+
     else:
         prompt("It's a tie!")
 
