@@ -36,7 +36,7 @@ def empty_squares(board):
 def user_play(board):
     available_slots = empty_squares(board)
     while True:
-        user_input = int(input(f'Please choose slot from {available_slots}: '))
+        user_input = int(input(f'==>Please choose slot from {available_slots}: '))
         if user_input not in available_slots:
             prompt(f'Invalid Choice. Please enter slot number from {available_slots}.')
         else:
@@ -73,13 +73,17 @@ def detect_winner(board):
 
     return None
 
-def start_game():
+def detect_grandwinner(score):
+    if score['User'] == WINNING_SCORE:
+        return 'User'
+    elif score['Computer'] == WINNING_SCORE:
+        return 'Computer'
+    return None
+
+def start_round(score):
     board = initialize_board()
     display_board(board)
-    score = {
-        'User' : 0,
-        'Computer': 0
-    }
+    '''
     prompt('Welcome to Tic Tac Toe!')
     prompt('Tic Tac Toe is a 2-player game played on a 3x3 '
     'grid called the board.')
@@ -90,42 +94,49 @@ def start_game():
     prompt('If all 9 squares are filled and neither player has 3 in '
     'a row, the game ends in a tie.')
     prompt(f"You are '{USER_MARKER}', Computer is '{COMPUTER_MARKER}'.")
+    prompt(f'The current score of User vs Computer is' 
+                f' {score['User']} : {score['Computer']}.')'''
 
     while True:
-            user_play(board)
-            if someone_won(board) or board_full(board):
-                display_board(board)
-                break
-            computer_play(board)
-            if someone_won(board) or board_full(board):
-                display_board(board)
-                break
+        user_play(board)
+        if someone_won(board) or board_full(board):
             display_board(board)
+            break
+        computer_play(board)
+        if someone_won(board) or board_full(board):
+            display_board(board)
+            break
+        display_board(board)
 
     if someone_won(board):
         prompt(f"The winner is '{detect_winner(board)}'!")
         score[detect_winner(board)] += 1
-        prompt(f'The current score of User vs Computer is' 
-               f'{score['User']} : {score['Computer']}')
-
+        prompt(f"The current score of User vs Computer is"
+            f" {score['User']} : {score['Computer']}.")
+     
     else:
         prompt("It's a tie!")
+        prompt(f'The current score of User vs Computer is' 
+            f' {score['User']} : {score['Computer']}.')
 
-def another_game_or_exit():
-    while True:
         
-        prompt('Would you like to play another game? (Y/N): ')
-        user_response = input().upper()
-        if user_response == 'Y':
-            play_tictactoe()
-        elif user_response == 'N':
-            prompt('Thanks for playing Tic Tac Toe! Goodbye :) ')
-            break
-        prompt('Invalid Input. Please enter Y to play another game or'
-            'N to exit')
-
 def play_tictactoe():
-    start_game()
-    another_game_or_exit()
+    while True:
+        score = {
+        'User' : 0,
+        'Computer': 0
+        }
+        while not detect_grandwinner(score):
+            start_round(score)
+
+        while True:    
+            prompt('Would you like to play another game? (Y/N): ')
+            user_response = input().lower()
+            if user_response == 'n' or user_response == 'no':
+                prompt('Thanks for playing Tic Tac Toe! Goodbye :) ')
+                break
+            elif user_response != 'y' or user_response != 'yes':
+                prompt('Invalid Input. Please enter Y to play another game or'
+                    'N to exit')
 
 play_tictactoe()
